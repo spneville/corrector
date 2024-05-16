@@ -62,7 +62,7 @@ def read_diabpot(path, n_states, eref):
 
     for i in range(n_states):
         W[i,i] -= eref
-        W[i,i] *= constants.eh2ev
+    W *= constants.eh2ev
             
     return W
 
