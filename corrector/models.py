@@ -62,3 +62,45 @@ class kdc:
                                                     order='F')
 
         return
+
+    def potential(self, Q):
+
+        W = np.zeros((self.n_states, self.n_states))
+
+        for i in range(self.n_states):
+            W[i,i] = self.e0[i]
+            for m in range(self.n_modes):
+                W[i,i] += 0.5 * self.freq[m] * Q[m]**2
+
+        for m in range(self.n_modes):
+            for i in range(self.n_states):
+                for j in range(self.n_states):
+                    pre = 1.0
+                    for k in range(self.order):
+                        pre    /= k+1
+                        c       = self.coeff[m,i,j,k] * pre
+                        W[i,j] += c * Q[m]**(k+1)
+                
+        return W
+
+    def potential_new(self, Q):
+
+        n_pnt = Q.shape[0]
+        
+        W = np.zeros((n_pnt,self.n_states, self.n_states))
+
+        for i in range(self.n_states):
+            W[:,i,i] = self.e0[i]
+            for m in range(self.n_modes):
+                W[:,i,i] += 0.5 * self.freq[m] * Q[:,m]**2
+
+        for m in range(self.n_modes):
+            for i in range(self.n_states):
+                for j in range(self.n_states):
+                    pre = 1.0
+                    for k in range(self.order):
+                        pre    /= k+1
+                        c       = self.coeff[m,i,j,k] * pre
+                        W[:,i,j] += c * Q[:,m]**(k+1)
+                
+        return W
